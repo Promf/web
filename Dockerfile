@@ -10,6 +10,8 @@ COPY delete_user.php /usr/share/nginx/html
 
 COPY add_user.php /usr/share/nginx/html
 
+COPY news.php /usr/share/nginx/html
+
 ENV MYSQL_DATABASE=mydb \
     MYSQL_USER=web \
     MYSQL_PASSWORD=123123 \

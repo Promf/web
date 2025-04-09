@@ -19,6 +19,19 @@
             max-width: 400px;
             margin: auto;
         }
+        header {
+            margin-bottom: 20px;
+        }
+        header a {
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff;
+            transition: 0.3s;
+        }
+        header a:hover {
+            color: #ff0000;
+            font-weight: bold;
+        }
         h2 {
             color: #333;
         }
@@ -53,21 +66,22 @@
             background-color: #c82333;
         }
         a {
-          text-decoration: none;
-          color: #007bff;
+            text-decoration: none;
+            color: #007bff;
         }
-
         a:hover {
-          color: #ff0000;
-          font-weight: bold;
+            color: #ff0000;
+            font-weight: bold;
         }
-
     </style>
 </head>
 <body>
+    <!-- Навигация -->
+    <header>
+        <a href="news.php">Перейти к новостям</a>
+    </header>
     <div class="container">
         <?php
-
         if (!isset($_COOKIE['user'])) {
             header("Location: index.html");
             exit();
@@ -90,7 +104,8 @@
             echo "<h2>Список участников</h2>";
             echo "<ul>";
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<li><a href='?delete_id=" . $row['id'] . "'>" . $row['name'] . " " . $row['surname'] . "</a></li>";            }
+                echo "<li><a href='?delete_id=" . $row['id'] . "'>" . $row['name'] . " " . $row['surname'] . "</a></li>";
+            }
             echo "</ul>";
         } else {
             echo "<p>Нет данных в таблице.</p>";
@@ -103,4 +118,3 @@
     </div>
 </body>
 </html>
-
