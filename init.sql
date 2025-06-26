@@ -21,6 +21,15 @@ CREATE TABLE IF NOT EXISTS intern (
     surname VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS workers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    position VARCHAR(50) NOT NULL,
+    phone VARCHAR(20) NOT NULL
+);
+
 INSERT INTO user (login, password) VALUES ('admin', 'admin') ON DUPLICATE KEY UPDATE password='admin';
 
 CREATE USER IF NOT EXISTS 'web'@'localhost' IDENTIFIED BY '123123';

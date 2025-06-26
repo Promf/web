@@ -17,24 +17,28 @@ if (!$conn) {
 $message = '';
 $success = false;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = trim($_POST['name']);
-    $surname = trim($_POST['surname']);
-
-    if (!empty($name) && !empty($surname)) {
-        $name = mysqli_real_escape_string($conn, $name);
-        $surname = mysqli_real_escape_string($conn, $surname);
-
-        $query = "INSERT INTO intern (name, surname) VALUES ('$name', '$surname')";
-
+// Удаление
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $worker_id = intval($_POST['worker_id']);
+    if ($worker_id > 0) {
+        $query = "DELETE FROM workers WHERE id = $worker_id";
         if (mysqli_query($conn, $query)) {
-            $message = "Участник успешно добавлен!";
+            $message = "Сотрудник успешно удалён.";
             $success = true;
         } else {
-            $message = "Ошибка при добавлении участника: " . mysqli_error($conn);
+            $message = "Ошибка при удалении: " . mysqli_error($conn);
         }
     } else {
-        $message = "Пожалуйста, заполните все поля.";
+        $message = "Неверный ID сотрудника.";
+    }
+}
+
+// Получаем всех сотрудников
+$workers = [];
+$result = mysqli_query($conn, "SELECT id, name, surname FROM workers ORDER BY surname, name");
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $workers[] = $row;
     }
 }
 
@@ -45,7 +49,7 @@ mysqli_close($conn);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Добавить участника</title>
+  <title>Удалить сотрудника</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -79,25 +83,19 @@ mysqli_close($conn);
       color: #333;
     }
     form {
-      margin: 20px 0;
+      margin-top: 20px;
     }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      text-align: left;
-      color: #555;
-    }
-    input {
+    select {
       padding: 8px;
       width: 100%;
-      margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      margin-bottom: 15px;
     }
     .btn {
       display: inline-block;
       padding: 10px 20px;
-      background-color: #007BFF;
+      background-color: #dc3545;
       color: white;
       border: none;
       border-radius: 5px;
@@ -105,10 +103,10 @@ mysqli_close($conn);
       transition: 0.3s;
     }
     .btn:hover {
-      background-color: #0056b3;
+      background-color: #c82333;
     }
     .message {
-      margin-top: 10px;
+      margin-top: 15px;
       padding: 10px;
       border-radius: 4px;
       background-color: #e7f3fe;
@@ -141,7 +139,7 @@ mysqli_close($conn);
   </header>
 
   <div class="container">
-    <h2>Добавить участника</h2>
+    <h2>Удалить сотрудника</h2>
 
     <?php if ($message): ?>
       <div class="message <?php echo $success ? 'success' : 'error'; ?>">
@@ -149,18 +147,23 @@ mysqli_close($conn);
       </div>
     <?php endif; ?>
 
-    <form action="add_user.php" method="POST">
-      <label for="name">Имя:</label>
-      <input type="text" id="name" name="name" required>
+    <?php if (!empty($workers)): ?>
+      <form method="POST">
+        <select name="worker_id" required>
+          <option value="">-- Выберите сотрудника --</option>
+          <?php foreach ($workers as $worker): ?>
+            <option value="<?php echo $worker['id']; ?>">
+              <?php echo htmlspecialchars($worker['surname'] . ' ' . $worker['name'], ENT_QUOTES); ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+        <button type="submit" class="btn">Удалить</button>
+      </form>
+    <?php else: ?>
+      <p>Сотрудники не найдены.</p>
+    <?php endif; ?>
 
-      <label for="surname">Фамилия:</label>
-      <input type="text" id="surname" name="surname" required>
-
-      <button type="submit" class="btn">Добавить</button>
-    </form>
-
-    <a href="main.php" class="back-link">← Назад на главную</a>
+    <a href="workers.php" class="back-link">← Назад к контактам</a>
   </div>
 </body>
 </html>
-

@@ -1,3 +1,4 @@
+
 FROM nginx:alpine
 
 COPY index.html /usr/share/nginx/html
@@ -11,6 +12,12 @@ COPY delete_user.php /usr/share/nginx/html
 COPY add_user.php /usr/share/nginx/html
 
 COPY news.php /usr/share/nginx/html
+
+COPY workers.php /usr/share/nginx/html
+
+COPY add_worker.php /usr/share/nginx/html
+
+COPY delete_worker.php /usr/share/nginx/html
 
 ENV MYSQL_DATABASE=mydb \
     MYSQL_USER=web \

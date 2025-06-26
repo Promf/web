@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    container_name: web
+    ports:
+      - 127.0.0.1:8080:80
+    volumes:
+      - type: bind
+        source: /var/log/nginx/error.log
+        target: /var/log/nginx/error.log
+      - mysql:/var/lib/mysql
+      - html:/usr/share/nginx/html
+      - nginx:/etc/nginx
+
+volumes:
+  mysql:
+  html:
+  nginx:
